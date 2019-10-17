@@ -1,4 +1,6 @@
 import csv
+import nltk
+from nltk.tokenize import word_tokenize
 
 
 def csv_to_list(file_name):
@@ -83,7 +85,7 @@ def validator_pipeline(training_list, train_fn, eval_fn):
     recall = make_dict_float()
     false_positive_rate = make_dict_float()
     f1_measure = make_dict_float()
-    print(true_positive)
+    # print(true_positive)
     print(f'{len(training)}   {len(testing)}')
     for test_item in testing:
         # print(test_item)
@@ -107,12 +109,15 @@ def validator_pipeline(training_list, train_fn, eval_fn):
         tn = true_negative[class_item]
         fp = false_positive[class_item]
         fn = false_negative[class_item]
-        accuracy[class_item] = (tp + tn) / (tp + fp + tn + fn)  # accuracy = (TP + TN) / (TP + FP + TN + FN)
-        precision[class_item] = tp / (tp + fp)  # Precision = TP / (TP + FP)
-        recall[class_item] = tp / (tp + fn)  # recall = TP / (TP + FN)
-        false_positive_rate[class_item] = fp / (fp + tn)  # false positive rate = FP / (FP + TN)
-        f1_measure[class_item] = \
-            (2 * precision[class_item] * recall[class_item]) / (precision[class_item] + recall[class_item])
+        print(f'tp:{tp}  tn:{tn}  fp:{fp}  fn:{fn}')
+        x = tp + tn + fp + fn
+        print(f'sum : {x}    expected: {len(testing)}')
+        # accuracy[class_item] = (tp + tn) / (tp + fp + tn + fn)  # accuracy = (TP + TN) / (TP + FP + TN + FN)
+        # precision[class_item] = tp / (tp + fp)  # Precision = TP / (TP + FP)
+        # recall[class_item] = tp / (tp + fn)  # recall = TP / (TP + FN)
+        # false_positive_rate[class_item] = fp / (fp + tn)  # false positive rate = FP / (FP + TN)
+        # f1_measure[class_item] = \
+        #     (2 * precision[class_item] * recall[class_item]) / (precision[class_item] + recall[class_item])
         # F1 measure = 2 * (precision * recall) / (precision + recall)
 
 
@@ -130,6 +135,14 @@ def make_dict_float():
     dict = {}
     for l_i in l:
         dict[l_i] = 0.0
+    return dict
+
+
+def make_dict_list():
+    l = ['hockey', 'nba', 'leagueoflegends', 'soccer', 'funny', 'movies', 'anime', 'Overwatch', 'trees', 'GlobalOffensive', 'nfl', 'AskReddit', 'gameofthrones', 'conspiracy', 'worldnews', 'wow', 'europe', 'canada', 'Music', 'baseball']
+    dict = {}
+    for l_i in l:
+        dict[l_i] = []
     return dict
 
 
@@ -152,5 +165,23 @@ def trainer(list_in, train_fn):
         train_fn(element[1:])
 
 
-pipeline_main()
+# pipeline_main()
 
+
+def word_looker():
+    train = csv_to_list('reddit_train.csv')
+    dl = make_dict_list()
+    for x in train:
+        dl[x[2]].append(x)
+    return dl
+
+
+def append_list(in_list, to_append):
+    for i, list_item in enumerate(in_list):
+        list_item.append(to_append[i])
+    return in_list
+
+
+x = append_list([[8],[9],[10]], [4,5,6])
+print(x)
+# word_looker()
