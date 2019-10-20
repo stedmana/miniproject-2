@@ -1,5 +1,8 @@
 import csv
+import validation
 import nltk
+import numpy as np
+import pandas as pd
 from nltk.tokenize import word_tokenize
 
 
@@ -38,8 +41,22 @@ def pipeline_main():
     # for x in sets:
     #     print('part 1: {}   part 2: {}'.format(len(x[0]), len(x[1])))
     print(f'train: {tr}, test: {ts}')
-    for set in sets:
-        validator_pipeline(set, train_stub, eval_stub)
+    for i, set in enumerate(sets):
+        print(f'0  {len(set[0])}     1  {len(set[1])}')
+        x = set[0]
+        a = np.array(x)
+        train = a[:, 1:]
+        y = set[1]
+        a_1 = np.array(y)
+        test = a_1[:, 1:]
+        fl_nm_train = 'train_kfold_' + str(i) + '.csv'
+        fl_nm_test = 'test_kfold_' + str(i) + '.csv'
+        train_df = pd.DataFrame(train)
+        test_df = pd.DataFrame(test)
+        train_df.to_csv(fl_nm_train)
+        test_df.to_csv(fl_nm_test)
+        erer = 54
+        # validator_pipeline(set, train_stub, eval_stub)
     # validator_pipeline(train, )
     # trainer(train, print)
 
@@ -181,7 +198,7 @@ def append_list(in_list, to_append):
         list_item.append(to_append[i])
     return in_list
 
-
-x = append_list([[8],[9],[10]], [4,5,6])
-print(x)
+pipeline_main()
+# x = append_list([[8],[9],[10]], [4,5,6])
+# print(x)
 # word_looker()
